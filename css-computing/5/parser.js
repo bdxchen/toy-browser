@@ -1,3 +1,4 @@
+const { match } = require('assert')
 const css = require('css')
 
 const EOF =Symbol('EOF')
@@ -5,16 +6,68 @@ const EOF =Symbol('EOF')
 let currentToken = null
 let currentAttribute = null
 let currentTextNode = null
+let rules = []
 let stack = [{
   type: 'document',
   children: []
 }]
 
-let rules = []
 function addCSSRules (text) {
   let ast = css.parse(text)
-  console.log(JSON.stringify(ast, null, "   "))
+  // console.log(JSON.stringify(ast, null, "   "))
   rules.push(...ast.stylesheet.rules)
+}
+
+function matchElement (element, selector) {
+  if (!selector || !element.attributes) {
+    return false
+  }
+  if (selector.charAt(0) == '#') {
+    let attr = element.attributes.filter(attr => attr.name === 'id')[0]
+    if (attr && attr.value === selector.replace('#', '')) {
+      return true
+    }
+  } else if (selector.charAt(0) == '.') {
+    let attr = element.attributes.filter(attr => attr.name === 'class')[0]
+    if (attr && attr.value === selector.replace('.', '')) {
+      return true
+    }
+  } else {
+    if (element.tagName === selector) {
+      return true
+    }
+  }
+  return false
+}
+
+function computeCSS (element) {
+  let elements = stack.slice().reverse()
+  if (!element.computedStyle) {
+    element.computedStyle = {}
+  }
+
+  for (let rule of rules) {
+    let selectorParts = rule.selectors[0].split(' ').reverse()
+
+    if (!matchElement(element, selectorParts[0])) {
+      continue
+    }
+
+    let matched = false
+    let j = 1
+    for (let i = 0; i < elements.length; i++) {
+      if (matchElement(elements[i], selectorParts[j])) {
+        j++
+      }
+    }
+    if (j >= selectorParts.length) {
+      matched = true
+    }
+
+    if (matched) {
+      console.log('Element', element, 'matched rule', rule)
+    }
+  }
 }
 
 function emit (token) {
@@ -37,6 +90,8 @@ function emit (token) {
         })
       }
     }
+
+    computeCSS(element)
 
     top.children.push(element)
     

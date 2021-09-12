@@ -13,8 +13,13 @@ let stack = [{
 let rules = []
 function addCSSRules (text) {
   let ast = css.parse(text)
-  console.log(JSON.stringify(ast, null, "   "))
+  // console.log(JSON.stringify(ast, null, "   "))
   rules.push(...ast.stylesheet.rules)
+}
+
+function computeCSS (element) {
+  console.log(rules)
+  console.log('compute CSS for Element', element)
 }
 
 function emit (token) {
@@ -37,6 +42,8 @@ function emit (token) {
         })
       }
     }
+
+    computeCSS(element)
 
     top.children.push(element)
     
