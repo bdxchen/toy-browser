@@ -1,0 +1,12 @@
+shelljs_*
+package-lock.json
+yarn.lock
+dist
+node_modules
+.vs
+cache
+.cache
+*log
+.idea
+.DS_Store
+.uglify
