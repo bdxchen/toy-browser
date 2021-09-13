@@ -1,4 +1,3 @@
-const { match } = require('assert')
 const css = require('css')
 
 const EOF =Symbol('EOF')
@@ -18,7 +17,7 @@ function addCSSRules (text) {
   rules.push(...ast.stylesheet.rules)
 }
 
-function matchElement (element, selector) {
+function match (element, selector) {
   return false
 }
 
@@ -31,14 +30,14 @@ function computeCSS (element) {
   for (let rule of rules) {
     let selectorParts = rule.selectors[0].split(' ').reverse()
 
-    if (!matchElement(element, selectorParts[0])) {
+    if (!match(element, selectorParts[0])) {
       continue
     }
 
     let matched = false
     let j = 1
     for (let i = 0; i < elements.length; i++) {
-      if (matchElement(elements[i], selectorParts[j])) {
+      if (match(elements[i], selectorParts[j])) {
         j++
       }
     }
