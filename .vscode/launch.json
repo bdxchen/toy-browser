@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/css-computing/7/Client.js"
+      "program": "${workspaceFolder}/layout/4/Client.js"
     }
   ]
 }
