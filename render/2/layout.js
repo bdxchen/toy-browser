@@ -163,12 +163,8 @@ function layout (element) {
       if (mainSpace < itemStyle[mainSize]) {
         flexLine.mainSpace = mainSpace
         flexLine.crossSpace = crossSpace
-
-        flexLine = []
+        flexLine = [item]
         flexLines.push(flexLine)
-
-        flexLine.push(item)
-
         mainSpace = style[mainSize]
         crossSpace = 0
       } else {
@@ -206,7 +202,7 @@ function layout (element) {
       currentMain = itemStyle[mainEnd]
     }
   } else {
-    flexLine.forEach(items => {
+    flexLine.forEach(function (items) {
       let mainSpace = items.mainSpace
       let flexTotal = 0
       for (let i = 0; i < items.length; i++) {
